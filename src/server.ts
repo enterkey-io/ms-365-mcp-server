@@ -149,13 +149,14 @@ class MicrosoftGraphServer {
       app.get('/.well-known/oauth-authorization-server', async (req, res) => {
         const protocol = req.secure ? 'https' : 'http';
         const url = new URL(`${protocol}://${req.get('host')}`);
+        const basePath = this.options.basePath || '';
 
         const scopes = buildScopesFromEndpoints(this.options.orgMode, this.options.enabledTools);
 
         res.json({
           issuer: url.origin,
-          authorization_endpoint: `${url.origin}/authorize`,
-          token_endpoint: `${url.origin}/token`,
+          authorization_endpoint: `${url.origin}${basePath}/authorize`,
+          token_endpoint: `${url.origin}${basePath}/token`,
           response_types_supported: ['code'],
           response_modes_supported: ['query'],
           grant_types_supported: ['authorization_code', 'refresh_token'],
@@ -169,15 +170,16 @@ class MicrosoftGraphServer {
       app.get('/.well-known/oauth-protected-resource', async (req, res) => {
         const protocol = req.secure ? 'https' : 'http';
         const url = new URL(`${protocol}://${req.get('host')}`);
+        const basePath = this.options.basePath || '';
 
         const scopes = buildScopesFromEndpoints(this.options.orgMode, this.options.enabledTools);
 
         res.json({
-          resource: `${url.origin}/mcp`,
+          resource: `${url.origin}${basePath}/mcp`,
           authorization_servers: [url.origin],
           scopes_supported: scopes,
           bearer_methods_supported: ['header'],
-          resource_documentation: `${url.origin}`,
+          resource_documentation: `${url.origin}${basePath}`,
         });
       });
 

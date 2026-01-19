@@ -48,7 +48,8 @@ program
   .option('--force-work-scopes', 'Backwards compatibility alias for --org-mode (deprecated)')
   .option('--toon', '(experimental) Enable TOON output format for 30-60% token reduction')
   .option('--discovery', 'Enable runtime tool discovery and loading (experimental feature)')
-  .option('--cloud <type>', 'Microsoft cloud environment: global (default) or china (21Vianet)');
+  .option('--cloud <type>', 'Microsoft cloud environment: global (default) or china (21Vianet)')
+  .option('--base-path <path>', 'Base URL path when server is behind a reverse proxy (e.g., "/ms365")');
 
 export interface CommandOptions {
   v?: boolean;
@@ -70,6 +71,7 @@ export interface CommandOptions {
   toon?: boolean;
   discovery?: boolean;
   cloud?: string;
+  basePath?: string;
 
   [key: string]: unknown;
 }
@@ -131,6 +133,11 @@ export function parseArgs(): CommandOptions {
   // Handle cloud type - CLI option takes precedence over environment variable
   if (options.cloud) {
     process.env.MS365_MCP_CLOUD_TYPE = options.cloud;
+  }
+
+  // Handle base path - CLI option takes precedence over environment variable
+  if (!options.basePath && process.env.MS365_MCP_BASE_PATH) {
+    options.basePath = process.env.MS365_MCP_BASE_PATH;
   }
 
   return options;
