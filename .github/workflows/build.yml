@@ -3,11 +3,19 @@ name: Build
 on:
   pull_request:
     branches: [ main ]
+    # No required checks on main, so a workflow-level docs skip can't hang a PR.
+    paths-ignore: [ '**.md', 'docs/**', 'LICENSE' ]
   workflow_dispatch:
+
+# Lean CI: one run per PR head; superseded runs cancel.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     strategy:
       matrix:

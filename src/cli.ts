@@ -49,7 +49,10 @@ program
   .option('--toon', '(experimental) Enable TOON output format for 30-60% token reduction')
   .option('--discovery', 'Enable runtime tool discovery and loading (experimental feature)')
   .option('--cloud <type>', 'Microsoft cloud environment: global (default) or china (21Vianet)')
-  .option('--base-path <path>', 'Base URL path when server is behind a reverse proxy (e.g., "/ms365")');
+  .option(
+    '--base-path <path>',
+    'Base URL path when server is behind a reverse proxy (e.g., "/ms365")'
+  );
 
 export interface CommandOptions {
   v?: boolean;
